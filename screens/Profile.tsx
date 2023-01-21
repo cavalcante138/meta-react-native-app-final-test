@@ -1,25 +1,96 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { ButtonLemon } from '../components/ButtonLemon';
 import { CheckBoxLemon } from '../components/CheckBoxLemon';
 import { ImagePickerLemon } from '../components/ImagePickerLemon';
 import { InputLemon } from '../components/InputLemon';
+import { InputLemonMask } from '../components/InputLemonMask';
+import { useAuth, User } from '../hooks/auth';
+import { validateUSPhoneNumber } from '../utils/utils';
 
 
-export const Profile = (navigation) => {
+export const Profile = () => {
 
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [emailNotification, setEmailNotification] = useState({
+  const { singOut, user, updateUser } = useAuth();
+  const toast = useToast();
+
+  const [name, setName] = useState(user.name || "");
+  const [lastName, setLastName] = useState(user.lastname || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [phone, setPhone] = useState(user.phoneNumber || "");
+  const [emailNotification, setEmailNotification] = useState(user.emailNotification || {
     orderStatuses: true,
     passwordChanges: true,
     specialOffers: true,
-    newsletter: true
+    newsletter: true,
   });
-  const [profileImage, setProfileImage] = useState(null)
+  const [profileImage, setProfileImage] = useState(user.avatarUrl || null)
+
+
+  const handleUpdateUser = () => {
+
+    console.log(phone)
+
+    if(validateUSPhoneNumber(phone)){
+      toast.show("Please put a valid phone", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
+      return
+
+    }
+
+    updateUser({
+      name: name,
+      lastname: lastName,
+      email: email,
+      phoneNumber: phone,
+      emailNotification: emailNotification,
+      avatarUrl: profileImage,
+      logged: true,
+    });
+    toast.show("Saved changes successfully", {
+      type: "success",
+      placement: "top",
+      duration: 4000,
+      animationType: "slide-in",
+    });
+  }
+
+  const handleSingOut = () => {
+    singOut();
+    toast.show("Logged out successfully", {
+      type: "success",
+      placement: "top",
+      duration: 4000,
+      animationType: "slide-in",
+    });
+  }
+  const handleDiscardUserUpdate = () => {
+    setName(user.name || "");
+    setLastName(user.lastname || "");
+    setEmail(user.email || "");
+    setPhone(user.phoneNumber || "");
+    setEmailNotification(user.emailNotification || {
+      orderStatuses: true,
+      passwordChanges: true,
+      specialOffers: true,
+      newsletter: true,
+    });
+    setProfileImage(user.avatarUrl || null);
+    toast.show("Discarded changes successfully", {
+      type: "success",
+      placement: "top",
+      duration: 4000,
+      animationType: "slide-in",
+    });
+  }
+
+
 
   const onChangeEmailNotification = (key) => {
     setEmailNotification({
@@ -27,10 +98,6 @@ export const Profile = (navigation) => {
       [key]: !emailNotification[key]
     });
   };
-
-  const Logout = () => {
-    AsyncStorage.removeItem('isOnBoard');
-  }
 
   return (
     <ScrollView style={styles.container}>
@@ -54,7 +121,9 @@ export const Profile = (navigation) => {
           value={email} onChange={setEmail} />
       </View>
       <View style={styles.inputContainer}>
-        <InputLemon label="Phone" placeholder="Type your phone"
+        <InputLemonMask label="Phone" 
+        placeholder="Type your phone"
+        mask="(999) 999-9999"
           value={phone} onChange={setPhone} />
       </View>
       <Text style={styles.title}>Email Notifications</Text>
@@ -85,7 +154,7 @@ export const Profile = (navigation) => {
         color='#000'
         pressedColor='#000'
         borderColor='#deaf4d'
-        onPress={Logout} />
+        onPress={handleSingOut} />
       </View>
       <View style={styles.buttonsContainer}>
         <ButtonLemon title="Discard changes"
@@ -93,10 +162,10 @@ export const Profile = (navigation) => {
           pressedBgColor='#ffffff2e'
           color='#000'
           pressedColor='#000'
-          onPress={() => { }} />
+          onPress={handleDiscardUserUpdate} />
 
         <ButtonLemon title="Save changes"
-          onPress={() => { }} />
+          onPress={handleUpdateUser} />
       </View>
     </ScrollView>
   );

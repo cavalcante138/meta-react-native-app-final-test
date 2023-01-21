@@ -10,6 +10,7 @@ interface Props {
     pressedBgColor?: string;
     pressedColor?: string;
     borderColor?: string;
+    disabled?: boolean;
 }
 
 export function ButtonLemon({
@@ -19,7 +20,8 @@ export function ButtonLemon({
     color = '#fff',
     pressedBgColor = '#495e57e4',
     pressedColor = '#fff',
-    borderColor = '#495e57'
+    borderColor = '#495e57',
+    disabled = false
 }: Props) {
   return(
     <Pressable
@@ -31,8 +33,10 @@ export function ButtonLemon({
                 : backgroundColor,
                 borderColor: borderColor,
             },
-            styles.wrapperCustom
+            styles.wrapperCustom,
+            disabled && { opacity: 0.5 }
         ]}
+        disabled={disabled}
     >
         {({ pressed }) => (
             <Text style={{ ...styles.text, color: pressed ? pressedColor : color}}>

@@ -1,4 +1,5 @@
 import { TextInput, View, Text, StyleSheet } from "react-native";
+import { MaskedTextInput } from "react-native-mask-text";
 
 interface Props {
     placeholder: string;
@@ -7,15 +8,17 @@ interface Props {
     label: string;
     keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
     autoComplete?: 'email' | 'name' | 'password' | 'username';
+    mask?: string | undefined;
 }
 
-export function InputLemon(
+export function InputLemonMask(
     { placeholder,
         value,
         onChange,
         label,
         keyboardType = 'default',
-        autoComplete = 'name'
+        autoComplete = 'name',
+        mask
     }
         : Props
 ) {
@@ -24,16 +27,17 @@ export function InputLemon(
         <Text
         style={styles.text} 
         >{label}</Text>
-        <TextInput
+        <MaskedTextInput
                 placeholder={placeholder}
                 value={value}
+                mask={mask ? mask : undefined}
                 autoCapitalize='none'
                 autoCorrect={false}
                 keyboardType={keyboardType}
                 autoComplete={autoComplete}
                 style={styles.input} 
-                onChange={(event) => {
-                onChange(event.nativeEvent.text.replace(" ", ""))
+                onChangeText={(text: string, rawText: string) => {
+                onChange(text)
                 }}        
             />
     </View>)

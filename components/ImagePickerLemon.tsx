@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, Image, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ButtonLemon } from './ButtonLemon';
+import { useAuth } from '../hooks/auth';
 
 interface Props {
   image: string | null;
@@ -12,6 +13,8 @@ interface Props {
 export function ImagePickerLemon(
   { image, setImage }: Props
 ) {
+
+  const { user } = useAuth()
 
 
   const pickImage = async () => {
@@ -39,7 +42,9 @@ export function ImagePickerLemon(
       <View style={styles.container}>
         {image ? <Image source={{ uri: image }} style={styles.avatarImage} /> :
           <Pressable style={styles.avatarPlaceholder} onPress={pickImage}>
-            <Text style={styles.avatarText}>LC</Text>
+            <Text style={styles.avatarText}>
+              {user.lastname ? user.name[0] + user.lastname[0] : user.name[0] + user.name[1]}
+            </Text>
           </Pressable>
         }
         <ButtonLemon
@@ -90,7 +95,8 @@ const styles = StyleSheet.create({
   avatarText: {
     color: '#fff',
     fontSize: 32,
-    fontFamily: 'Karla_700Bold'
+    fontFamily: 'Karla_700Bold',
+    textTransform: 'uppercase'
   },
   buttonRemoveContainer: {
     marginLeft: 10
