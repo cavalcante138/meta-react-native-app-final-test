@@ -1,6 +1,7 @@
 import { Pressable, View, Text, Image, StyleSheet } from "react-native";
 import { useAuth } from "../hooks/auth";
 import { AvatarHeader } from "./AvatarHeader";
+import { Ionicons } from '@expo/vector-icons'; 
 import { Logo } from "./Logo";
 
 interface Props {
@@ -21,13 +22,13 @@ export const Header = ({
                 onPress={() => navigation.goBack()}
                 style={styles.leftButton}
             >
-                <Text>Go Back</Text></Pressable> : <View
+                <Ionicons name="md-arrow-back-circle-sharp" size={32} color="#495e57" /></Pressable> : <View
                 style={styles.leftButton}
                 ></View>}
             <Logo />
-            <View style={styles.leftButton}>
+            <Pressable style={styles.leftButton} onPress={() => navigation.navigate('Profile')}>
                 {user.logged && <AvatarHeader user={user} />}
-            </View>
+            </Pressable>
         </View>
     );
 };
@@ -40,7 +41,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingTop: 50,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        backgroundColor: '#fff'
     },
     avatarPlaceholder: {
         width: 40,

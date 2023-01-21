@@ -120,12 +120,12 @@ export const Profile = () => {
         <InputLemon label="Email" placeholder="Type your email"
           value={email} onChange={setEmail} />
       </View>
-      <View style={styles.inputContainer}>
+      {/* <View style={styles.inputContainer}>
         <InputLemonMask label="Phone" 
         placeholder="Type your phone"
         mask="(999) 999-9999"
           value={phone} onChange={setPhone} />
-      </View>
+      </View> */}
       <Text style={styles.title}>Email Notifications</Text>
       <View style={styles.inputContainer}>
         <CheckBoxLemon label="Order Statuses" isSelected={emailNotification.orderStatuses} setSelection={() => { 

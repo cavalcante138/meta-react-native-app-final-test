@@ -8,6 +8,7 @@ import { Profile } from '../screens/Profile';
 import { Onboarding } from '../screens/Onboarding';
 import { Logo } from '../components/Logo';
 import { Header } from '../components/Header';
+import { Home } from '../screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,13 +34,25 @@ export default function Routes() {
     }
       >
         {user.logged ? (
-          <Stack.Screen name="Profile" component={Profile}
+        <>
+          <Stack.Screen name="Home" component={Home}
           options={
             {
                 animation: "none",
             }
+            }
+          />
+          <Stack.Screen name="Profile" component={Profile}
+          options={
+            {
+                header: (props) => <Header 
+                navigation={props.navigation} 
+                canGoBack={true}
+                />,
+            }
           }
           />
+          </>
         ) : (
           <Stack.Screen name="Onboarding" component={Onboarding}
           options={
