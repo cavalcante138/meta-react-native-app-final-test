@@ -1,4 +1,4 @@
-import { TextInput, View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 
 export function Logo() {
     return (
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    icon: {
+    icon: { 
         width: 30,
         height: 50,
         objectFit: 'contain'
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: '#495e57',
         fontWeight: 'bold',
-        fontFamily: 'MarkaziText_500Medium',
+        fontFamily: 'MarkaziText_400Regular',
         marginLeft: 5
     }
 });

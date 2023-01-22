@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, StatusBar, KeyboardAvoidingView } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { ButtonLemon } from '../components/ButtonLemon';
 import { InputLemon } from '../components/InputLemon';
+import { MainBanner } from '../components/MainBanner';
 import { useAuth } from '../hooks/auth';
 import { isEmailValid, isNameValid } from '../utils/utils';
 
@@ -41,14 +42,29 @@ export function Onboarding() {
     },[email, name, lastname]);
 
     return (
-    <ScrollView style={styles.container}>
+      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="position" enabled>
+      <StatusBar 
+      barStyle="dark-content"
+      translucent
+      backgroundColor="transparent"
+      />
+      <MainBanner children={undefined} />
+    <ScrollView contentContainerStyle={styles.scrollview}>  
+
       <View style={styles.inputContainer}>
-        <InputLemon label="First Name" placeholder="Type your name"
-          value={name} onChange={setName} />
+        <InputLemon label="First Name" 
+        autoCapitalize='words'
+        placeholder="Type your name"
+        value={name} 
+        onChange={setName} />
       </View>
       <View style={styles.inputContainer}>
-        <InputLemon label="Last Name" placeholder="Type your name"
-          value={lastname} onChange={setLastname} />
+        <InputLemon label="Last Name" 
+        placeholder="Type your name"
+        autoCapitalize='words'
+        value={lastname} 
+        onChange={setLastname} />
       </View>
       <View style={styles.inputContainer}>
         <InputLemon label="Email" placeholder="Type your email"
@@ -60,14 +76,21 @@ export function Onboarding() {
         disabled={!buttonEnabled}
         onPress={handleSignIn} />
       </View>
+
     </ScrollView>
+    </KeyboardAvoidingView>
+    </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+  container: {
+    flex: 1,
+  },
+    scrollview: {
         padding: 15,
+        flexGrow: 1,
+        paddingBottom: 100
       },
       title: {
         fontSize: 16,

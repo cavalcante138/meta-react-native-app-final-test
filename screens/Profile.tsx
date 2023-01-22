@@ -1,17 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StatusBar, KeyboardAvoidingView } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { ButtonLemon } from '../components/ButtonLemon';
 import { CheckBoxLemon } from '../components/CheckBoxLemon';
+import { Header } from '../components/Header';
 import { ImagePickerLemon } from '../components/ImagePickerLemon';
 import { InputLemon } from '../components/InputLemon';
 import { InputLemonMask } from '../components/InputLemonMask';
 import { useAuth, User } from '../hooks/auth';
-import { validateUSPhoneNumber } from '../utils/utils';
+import { isEmailValid, validateUSPhoneNumber } from '../utils/utils';
 
 
-export const Profile = () => {
+export const Profile = (props) => {
 
   const { singOut, user, updateUser } = useAuth();
   const toast = useToast();
@@ -28,10 +29,59 @@ export const Profile = () => {
   });
   const [profileImage, setProfileImage] = useState(user.avatarUrl || null)
 
+  const onChangePhone = (phone: string) => {
+    setPhone(phone);
+  }
 
   const handleUpdateUser = () => {
+    if(name === ""){
+      toast.show("Please put a name", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
+      return
+    }
+    if(lastName === ""){
+      toast.show("Please put a last name", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
 
-    console.log(phone)
+      return
+    }
+    if(email === ""){
+      toast.show("Please put a email", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
+      return
+    }
+
+    if(!isEmailValid(email)){
+      toast.show("Please put a valid email", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
+      return
+    }
+
+    if(compareUserStateToUserChanges() === false) {
+      toast.show("No new changes to save", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
+      return
+    };
 
     if(validateUSPhoneNumber(phone)){
       toast.show("Please put a valid phone", {
@@ -70,7 +120,32 @@ export const Profile = () => {
       animationType: "slide-in",
     });
   }
+
+
+  const compareUserStateToUserChanges = () => {
+    return (
+      name !== user.name ||
+      lastName !== user.lastname ||
+      email !== user.email ||
+      phone !== user.phoneNumber ||
+      emailNotification !== user.emailNotification ||
+      profileImage !== user.avatarUrl
+    );
+  }
+
+
   const handleDiscardUserUpdate = () => {
+
+    if(compareUserStateToUserChanges() === false) {
+      toast.show("No changes to discard", {
+        type: "danger",
+        placement: "top",
+        duration: 4000,
+        animationType: "slide-in",
+      });
+      return
+    };
+
     setName(user.name || "");
     setLastName(user.lastname || "");
     setEmail(user.email || "");
@@ -101,6 +176,14 @@ export const Profile = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <KeyboardAvoidingView  behavior={'position'} enabled
+      keyboardVerticalOffset={-130}
+      >
+      <StatusBar 
+      barStyle="dark-content"
+      translucent
+      backgroundColor="transparent"
+      />
       <Text style={styles.title}>Personal Information</Text>
       <View style={styles.imagePickerContainer}>
       <ImagePickerLemon 
@@ -109,23 +192,34 @@ export const Profile = () => {
       />
       </View>
       <View style={styles.inputContainer}>
-        <InputLemon label="Name" placeholder="Type your name"
+        <InputLemon label="Name" 
+          autoCapitalize='words'
+          placeholder="Type your name"
           value={name} onChange={setName} />
       </View>
       <View style={styles.inputContainer}>
-        <InputLemon label="Last Name" placeholder="Type your last name"
-          value={lastName} onChange={setLastName} />
+        <InputLemon label="Last Name" 
+          autoCapitalize='words'
+          placeholder="Type your last name"
+          value={lastName} 
+          onChange={setLastName} />
       </View>
       <View style={styles.inputContainer}>
-        <InputLemon label="Email" placeholder="Type your email"
-          value={email} onChange={setEmail} />
+        <InputLemon 
+          label="Email" 
+          placeholder="Type your email"
+          value={email} 
+          onChange={setEmail} />
       </View>
-      {/* <View style={styles.inputContainer}>
-        <InputLemonMask label="Phone" 
+      <View style={styles.inputContainer}>
+        <InputLemonMask 
+        label="Phone" 
         placeholder="Type your phone"
-        mask="(999) 999-9999"
-          value={phone} onChange={setPhone} />
-      </View> */}
+        mask={
+          ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+          value={phone} 
+        onChange={onChangePhone} />
+      </View>
       <Text style={styles.title}>Email Notifications</Text>
       <View style={styles.inputContainer}>
         <CheckBoxLemon label="Order Statuses" isSelected={emailNotification.orderStatuses} setSelection={() => { 
@@ -167,6 +261,7 @@ export const Profile = () => {
         <ButtonLemon title="Save changes"
           onPress={handleUpdateUser} />
       </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
@@ -195,6 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 15,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
+    paddingBottom: 30
   }
 });

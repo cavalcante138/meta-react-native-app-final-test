@@ -1,5 +1,5 @@
 import { TextInput, View, Text, StyleSheet } from "react-native";
-import MaskInput from 'react-native-mask-input';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface Props {
     placeholder: string;
@@ -8,55 +8,53 @@ interface Props {
     label: string;
     keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
     autoComplete?: 'email' | 'name' | 'password' | 'username';
-    mask?: any[] | undefined;
 }
 
-export function InputLemonMask(
+export function SearchInput(
     { placeholder,
         value,
         onChange,
         label,
         keyboardType = 'default',
-        autoComplete = 'name',
-        mask
+        autoComplete = 'name'
     }
         : Props
 ) {
-
     return (
-    <View>
-        <Text
-        style={styles.text} 
-        >{label}</Text>
-        <MaskInput
+    <View style={styles.container}>
+        <View>
+        <FontAwesome name="search" size={20} color="#666" />
+        </View>
+        <TextInput
                 placeholder={placeholder}
                 value={value}
-                mask={mask ? mask : []}
                 autoCapitalize='none'
                 autoCorrect={false}
                 keyboardType={keyboardType}
                 autoComplete={autoComplete}
                 style={styles.input} 
-                onChangeText={(event) => {
-                  onChange(event.replace(" ", ""))
-                  }}
-
+                onChange={(event) => {
+                onChange(event.nativeEvent.text.replace(" ", ""))
+                }}        
             />
     </View>)
 }
 
 const styles = StyleSheet.create({
-    input: {
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
         borderWidth: 1,
         borderColor: '#D9D9D9',
         borderRadius: 8,
-        padding: 10
+        paddingHorizontal: 10,
+        backgroundColor: '#fff'
     },
-    text: {
-        fontSize: 14,
-        color: '#5b5b5b',
-        fontWeight: 'bold',
-        fontFamily: 'Karla_700Bold',
-        marginBottom: 5
-    }
+    input: {
+        fontSize: 16,
+        paddingLeft: 10,
+        paddingRight: 10, 
+        width: '98%',
+        height: 40
+    },
 });

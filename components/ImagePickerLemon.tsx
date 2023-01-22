@@ -1,5 +1,5 @@
 import Checkbox from 'expo-checkbox';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Button, Image, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ButtonLemon } from './ButtonLemon';

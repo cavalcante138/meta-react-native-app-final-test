@@ -1,70 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
-import { getMenuItemsByCategory } from '../database/database';
 
 interface Category {
-    id: string;
-    name: string;
-    selected: boolean;
+  id: string;
+  name: string;
+  selected: boolean;
 }
 
 interface Props {
-    categories: Category[];
-    onCategorySelect: (categoryId: string) => void;
+  categories: Category[];
+  onCategorySelect: (categoryId: string) => void;
 }
 
 const CategoriesList = (props: Props) => {
 
-    const [categories, setCategories] = useState(props.categories);
+  const [categories, setCategories] = useState(props.categories);
 
-    
-    useEffect(() => {
+  useEffect(() => {
+    setCategories(props.categories)
+  }, [props.categories])
 
-        setCategories(props.categories)
 
-    }, [props.categories])
-    
+  const onCategoryPress = async (categoryId: string) => {
+    const updatedCategories = categories.map(category => {
+      if (category.id === categoryId) {
+        return { ...category, selected: !category.selected };
+      }
+      return category;
+    });
+    setCategories(updatedCategories);
+    props.onCategorySelect(categoryId);
 
-    const onCategoryPress = async (categoryId: string) => {
-        const updatedCategories = categories.map(category => {
-            if (category.id === categoryId) {
-                return { ...category, selected: !category.selected };
-            }
-            return category;
-        });
-        setCategories(updatedCategories);
-        props.onCategorySelect(categoryId);
+  };
 
-    };
-
-    const renderCategory = ({ item }: { item: Category }) => {
-        const backgroundColor = item.selected ? '#f2f2f2' : 'white';
-        const textColor = item.selected ? 'black' : 'gray';
-        return (
-            <TouchableOpacity
-                style={{
-                    backgroundColor: backgroundColor,
-                    padding: 10,
-                    borderRadius: 5,
-                    marginVertical: 5,
-                    marginHorizontal: 10,
-                }}
-                onPress={() => onCategoryPress(item.id)}
-            >
-                <Text style={{ color: textColor }}>{item.name}</Text>
-            </TouchableOpacity>
-        );
-    };
-
+  const renderCategory = ({ item }: { item: Category }) => {
     return (
-        <FlatList
-            data={categories}
-            renderItem={renderCategory}
-            keyExtractor={item => item.id}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-        />
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#edefee',
+          padding: 10,
+          borderRadius: 30,
+          marginVertical: 5,
+          marginRight: 10,
+          opacity: item.selected ? 1 : 0.4
+        }}
+        onPress={() => onCategoryPress(item.id)}
+      >
+        <Text style={{ color: '#495e57', 
+          fontFamily: 'Karla_700Bold',
+          textTransform: 'capitalize'
+          }}>
+            {item.name}
+        </Text>
+      </TouchableOpacity>
     );
+  };
+
+  return (
+    <FlatList
+      data={categories}
+      renderItem={renderCategory}
+      keyExtractor={item => item.id}
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+    />
+  );
 };
 
 export default CategoriesList;

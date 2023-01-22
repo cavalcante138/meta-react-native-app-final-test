@@ -7,6 +7,7 @@ interface Props {
     label: string;
     keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
     autoComplete?: 'email' | 'name' | 'password' | 'username';
+    autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
 }
 
 export function InputLemon(
@@ -15,7 +16,8 @@ export function InputLemon(
         onChange,
         label,
         keyboardType = 'default',
-        autoComplete = 'name'
+        autoComplete = 'name',
+        autoCapitalize = 'none'
     }
         : Props
 ) {
@@ -27,7 +29,7 @@ export function InputLemon(
         <TextInput
                 placeholder={placeholder}
                 value={value}
-                autoCapitalize='none'
+                autoCapitalize={autoCapitalize}
                 autoCorrect={false}
                 keyboardType={keyboardType}
                 autoComplete={autoComplete}

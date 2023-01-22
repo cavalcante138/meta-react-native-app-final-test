@@ -34,7 +34,6 @@ export async function createTable() {
             "insert into menuitems ( name, price, description, image, category) values (?, ?, ?, ?, ?)",
             [item.name, item.price, item.description, item.image, item.category]
           );
-          console.log(`Menu item ${item.name} inserted successfully`);
         } catch (error) {
           console.log(`Error inserting menu item ${item.name}: ${error}`);
         }
@@ -65,13 +64,3 @@ export async function createTable() {
       });
     });
   }
-
-
-//   export async function dropTable() {
-//   return new Promise((resolve) => {
-//     db.transaction((tx) => {
-//       tx.executeSql("drop table menuitems");
-//     });
-//     console.log("clear");
-//   });
-// }

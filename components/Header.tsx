@@ -1,4 +1,5 @@
 import { Pressable, View, Text, Image, StyleSheet } from "react-native";
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { useAuth } from "../hooks/auth";
 import { AvatarHeader } from "./AvatarHeader";
 import { Ionicons } from '@expo/vector-icons'; 
@@ -16,8 +17,12 @@ export const Header = ({
 
     const { user } = useAuth();
 
+    const StatusBarHeight: number = getStatusBarHeight();
+
     return (
-        <View style={styles.container}>
+        <View style={{ ...styles.container,
+        paddingTop: StatusBarHeight + 10,
+        }}>
             {canGoBack ? <Pressable
                 onPress={() => navigation.goBack()}
                 style={styles.leftButton}
@@ -36,11 +41,10 @@ export const Header = ({
 
 const styles = StyleSheet.create({
     container: {
-        height: 120,
+        height: 110,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: 50,
         paddingHorizontal: 10,
         backgroundColor: '#fff'
     },
