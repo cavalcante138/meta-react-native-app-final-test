@@ -9,7 +9,7 @@ import { ImagePickerLemon } from '../components/ImagePickerLemon';
 import { InputLemon } from '../components/InputLemon';
 import { InputLemonMask } from '../components/InputLemonMask';
 import { useAuth, User } from '../hooks/auth';
-import { isEmailValid, validateUSPhoneNumber } from '../utils/utils';
+import { isEmailValid } from '../utils/utils';
 
 
 export const Profile = (props) => {
@@ -83,15 +83,14 @@ export const Profile = (props) => {
       return
     };
 
-    if(validateUSPhoneNumber(phone)){
-      toast.show("Please put a valid phone", {
+    if(phone.length !== 13 && phone.length !== 0){
+      toast.show("Please put a valid phone number", {
         type: "danger",
         placement: "top",
         duration: 4000,
         animationType: "slide-in",
       });
       return
-
     }
 
     updateUser({
